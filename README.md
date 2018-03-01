@@ -48,6 +48,13 @@ assumeRole(getProfile())
     AWS.config.credentials = credentials
     // ...
 })
+
+// Or define the profile and source profile yourself
+assumeRole('client_1', 'source_profile')
+.then(credentials => {
+    AWS.config.credentials = credentials
+    // ...
+})
 ```
 
 ### Install globally

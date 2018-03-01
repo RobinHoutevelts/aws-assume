@@ -9,14 +9,14 @@ import { parse } from 'ini'
 import { homedir } from 'os'
 export { config as awsConfig } from 'aws-sdk';
 
-export function assumeRole(profile) {
-  const creds = new SharedIniFileCredentials({ profile })
+export function assumeRole(profile, sourceProfile = 'default') {
+  const creds = new SharedIniFileCredentials({ profile: sourceProfile })
 
   const awsProfileDir = creds.filename ? dirname(creds.filename) : join(homedir(), '.aws')
   const file = process.env.AWS_CONFIG_FILE || join(awsProfileDir, 'config')
 
   const config = parse(readFileSync(file, 'utf-8'))[`profile ${profile}`]
-  const sts = new STS()
+  const sts = new STS({ credentials: creds })
 
   const options = {
     RoleArn: config.role_arn,
